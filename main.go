@@ -17,4 +17,4 @@ func getUserInput() int {
 	return num
 }
 
-func calculate(num1, num2, num3 float64) {}
+func calculate(num1 int, num2, num3 float64) {}
