@@ -11,6 +11,12 @@ const (
 	RUB = "RUB"
 )
 
+var exchangeRates = map[string]float64{
+	USD: 1.0,
+	EUR: 0.85,
+	RUB: 75.50,
+}
+
 func main() {
 	fmt.Println("=== Калькулятор валют ===")
 
@@ -54,30 +60,10 @@ func getAmountInput(prompt string) float64 {
 }
 
 func calculate(amount float64, from, to string) float64 {
-	const (
-		USD_TO_EUR = 0.85
-		USD_TO_RUB = 75.50
-		EUR_TO_RUB = 88.82
-	)
-
 	if from == to {
 		return amount
 	}
 
-	switch from + "_TO_" + to {
-	case "USD_TO_EUR":
-		return amount * USD_TO_EUR
-	case "USD_TO_RUB":
-		return amount * USD_TO_RUB
-	case "EUR_TO_RUB":
-		return amount * EUR_TO_RUB
-	case "EUR_TO_USD":
-		return amount / USD_TO_EUR
-	case "RUB_TO_USD":
-		return amount / USD_TO_RUB
-	case "RUB_TO_EUR":
-		return amount / EUR_TO_RUB
-	default:
-		return 0
-	}
+	usdAmount := amount / exchangeRates[from]
+	return usdAmount * exchangeRates[to]
 }
