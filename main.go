@@ -12,17 +12,20 @@ const (
 )
 
 func main() {
+	exchangeRates := &map[string]float64{
+		USD: 1.0,
+		EUR: 0.85,
+		RUB: 75.50,
+	}
+
 	fmt.Println("=== Калькулятор валют ===")
 
 	fromCurrency := getCurrencyInput("Введите исходную валюту (USD, EUR, RUB): ")
-
 	amount := getAmountInput("Введите сумму: ")
-
 	toCurrency := getCurrencyInput("Введите целевую валюту (USD, EUR, RUB): ")
 
-	result := calculate(amount, fromCurrency, toCurrency)
+	result := calculate(amount, fromCurrency, toCurrency, exchangeRates)
 	fmt.Printf("\nРезультат: %.2f %s = %.2f %s\n", amount, fromCurrency, result, toCurrency)
-
 }
 
 func getCurrencyInput(prompt string) string {
@@ -53,31 +56,11 @@ func getAmountInput(prompt string) float64 {
 	}
 }
 
-func calculate(amount float64, from, to string) float64 {
-	const (
-		USD_TO_EUR = 0.85
-		USD_TO_RUB = 75.50
-		EUR_TO_RUB = 88.82
-	)
-
+func calculate(amount float64, from, to string, rates *map[string]float64) float64 {
 	if from == to {
 		return amount
 	}
 
-	switch from + "_TO_" + to {
-	case "USD_TO_EUR":
-		return amount * USD_TO_EUR
-	case "USD_TO_RUB":
-		return amount * USD_TO_RUB
-	case "EUR_TO_RUB":
-		return amount * EUR_TO_RUB
-	case "EUR_TO_USD":
-		return amount / USD_TO_EUR
-	case "RUB_TO_USD":
-		return amount / USD_TO_RUB
-	case "RUB_TO_EUR":
-		return amount / EUR_TO_RUB
-	default:
-		return 0
-	}
+	usdAmount := amount / (*rates)[from]
+	return usdAmount * (*rates)[to]
 }
