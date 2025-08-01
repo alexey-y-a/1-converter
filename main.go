@@ -11,24 +11,21 @@ const (
 	RUB = "RUB"
 )
 
-var exchangeRates = map[string]float64{
-	USD: 1.0,
-	EUR: 0.85,
-	RUB: 75.50,
-}
-
 func main() {
+	exchangeRates := &map[string]float64{
+		USD: 1.0,
+		EUR: 0.85,
+		RUB: 75.50,
+	}
+
 	fmt.Println("=== Калькулятор валют ===")
 
 	fromCurrency := getCurrencyInput("Введите исходную валюту (USD, EUR, RUB): ")
-
 	amount := getAmountInput("Введите сумму: ")
-
 	toCurrency := getCurrencyInput("Введите целевую валюту (USD, EUR, RUB): ")
 
-	result := calculate(amount, fromCurrency, toCurrency)
+	result := calculate(amount, fromCurrency, toCurrency, exchangeRates)
 	fmt.Printf("\nРезультат: %.2f %s = %.2f %s\n", amount, fromCurrency, result, toCurrency)
-
 }
 
 func getCurrencyInput(prompt string) string {
@@ -59,11 +56,11 @@ func getAmountInput(prompt string) float64 {
 	}
 }
 
-func calculate(amount float64, from, to string) float64 {
+func calculate(amount float64, from, to string, rates *map[string]float64) float64 {
 	if from == to {
 		return amount
 	}
 
-	usdAmount := amount / exchangeRates[from]
-	return usdAmount * exchangeRates[to]
+	usdAmount := amount / (*rates)[from]
+	return usdAmount * (*rates)[to]
 }
